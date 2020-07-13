@@ -1,0 +1,343 @@
+openapi: 3.0.1
+
+info:
+  title: API Users
+  version: 1.0.1
+  description: "Documentação para acesso a API Users"
+
+servers:
+- url: http://localhost:5000/
+
+tags:
+- name: Users
+
+paths:
+  # Users
+  /users:
+    #LISTAR REGISTROS
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+      - Users
+      summary: Lista todos os usuários
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/response'
+        404:
+          description: Nenhuma registro encontrado
+          content: {}
+        500:
+          description: Internal Server Error
+          content: {}
+    
+    #CADASTRAR REGISTROS
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+      - Users
+      summary: Adiciona um novo usuário, mas ele precisa ser liberado para ter acesso.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/post'
+        required: true
+      responses:
+        201:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response'
+        500:
+          description: Internal Server Error
+          content: {}
+    
+    #ATAULIZAR REGISTROS
+    patch:
+      security:
+        - bearerAuth: []
+      tags:
+      - Users
+      summary: Altera dados de uma categoria
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/patch'
+        required: true
+      responses:
+        202:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response'
+        404:
+          description: Nenhuma categoria cadastrada com esse id
+          content: {}
+        500:
+          description: Internal Server Error
+          content: {}
+    
+    #APAGAR REGISTROS
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+      - Users
+      summary: Deleta uma categoria através do seu id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/delete'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response'
+        404:
+          description: Nenhuma categoria cadastrada com esse id
+          content: {}
+        500:
+          description: Internal Server Error
+          content: {}
+
+  /users/{id}:
+    #LISTAR REGISTRO ESPECÍFICO
+    get:
+      tags:
+      - Users
+      summary: Lista uma categoria através do seu id
+      parameters:
+      - name: id
+        in: path
+        description: id da categoria
+        required: true
+        schema:
+          type: integer
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/post'
+        404:
+          description: Nenhuma categoria cadastrada com esse id
+          content: {}
+        500:
+          description: Internal Server Error
+          content: {}
+
+  # Login
+  /users/login:
+    #Autenticação de Usuários
+    post:
+      tags:
+      - Login
+      summary: Realiza a autenticação de usuários e gera token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/user'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/login'
+        401:
+          description: Usuário não autenticado
+          content: {}
+        404:
+          description: Nenhuma registro encontrado
+          content: {}
+        500:
+          description: Internal Server Error
+          content: {}
+  
+#SCHEMA
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    response:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        idEmpresa:
+          type: integer
+          example: 1
+        nome:
+          type: string
+          example: "Ricardo Marques"
+        cpf:
+          type: string
+          example: "000.000.000-00"
+        celular:
+          type: string
+          example: "(00) 00000-0000"
+        telefone:
+          type: string
+          example: "(00) 0000-0000"
+        email:
+          type: string
+          example: "nome@provedor.com.br"
+        usuario:
+          type: string
+          example: "ricks"
+        data_cadastro:
+          type: date
+          example: "yyyy-mm-dd hh:mm:ss"
+        data_acesso:
+          type: date
+          example: "yyyy-mm-dd hh:mm:ss"
+        foto:
+          type: string
+          example: "123456.jpg"
+        status:
+          type: integer
+          example: 1
+    post:
+      required:
+      - idEmpresa
+      - nome
+      - cpf
+      - celular
+      - email
+      - usuario
+      - senha
+      type: object
+      properties:
+        idEmpresa:
+          type: integer
+          example: 1
+        nome:
+          type: string
+          example: "Ricardo Marques"
+        cpf:
+          type: string
+          example: "123.456.789-10"
+        celular:
+          type: string
+          example: "(00) 00000-0000"
+        telefone:
+          type: string
+          example: "(00) 0000-0000"
+        email:
+          type: string
+          example: "nome@provedor.com.br"
+        usuario:
+          type: string
+          example: "user"
+        senha:
+          type: string
+          example: "xyz@abc"
+        foto:
+          type: file
+          example: "profile.png"
+    patch:
+      required:
+      - id
+      - idEmpresa
+      - nome
+      - cpf
+      - celular
+      - telefone
+      - email
+      - usuario
+      - senha
+      - foto
+      - status
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        idEmpresa:
+          type: integer
+          example: 1
+        nome:
+          type: string
+          example: "Ricardo Marques"
+        cpf:
+          type: string
+          example: "123.456.789-10"
+        celular:
+          type: string
+          example: "(00) 00000-0000"
+        telefone:
+          type: string
+          example: "(00) 0000-0000"
+        email:
+          type: string
+          example: "nome@provedor.com.br"
+        usuario:
+          type: string
+          example: "user"
+        senha:
+          type: string
+          example: "xyz@abc"
+        foto:
+          type: file
+          example: "profile.png"
+        status:
+          type: integer
+          example: 1
+    delete:
+      required:
+      - id
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+    user:
+      required:
+      - usuario
+      - senha
+      type: object
+      properties:
+        usuario:
+          type: string
+          example: "user"
+        senha:
+          type: string
+          example: "password"
+    login:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 200
+        msg:
+          type: string
+          example: "Usuário autenticado com sucesso!"
+        token:
+          type: string
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwidXN1YXJpbyI6ImFsZW5hc...."
+security:
+  - bearerAuth: []

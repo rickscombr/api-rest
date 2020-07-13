@@ -1,0 +1,259 @@
+openapi: 3.0.1
+
+info:
+  title: API Categorias
+  version: 1.0.1
+  description: "Documentação para acesso a API Categorias do sistema Finance"
+
+servers:
+- url: http://localhost:5000/
+
+tags:
+- name: Categorias
+
+paths:
+  # Categorias
+  /categorias:
+    #LISTAR REGISTROS
+    get:
+      tags:
+      - Categorias
+      summary: Lista todos os Tipos de Categorias
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/response'
+        404:
+          description: Nenhuma registro encontrado
+          content: {}
+        500:
+          description: Internal Server Error
+          content: {}
+    
+    #CADASTRAR REGISTROS
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+      - Categorias
+      summary: Adiciona um novo registro do Tipo de Categoria
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/post'
+        required: true
+      responses:
+        201:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response'
+        500:
+          description: Internal Server Error
+          content: {}
+    
+    #ATAULIZAR REGISTROS
+    patch:
+      security:
+        - bearerAuth: []
+      tags:
+      - Categorias
+      summary: Altera dados de um Tipo de Categoria
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/patch'
+        required: true
+      responses:
+        202:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response'
+        404:
+          description: Nenhum Tipo de Categoria cadastrado com esse id
+          content: {}
+        500:
+          description: Internal Server Error
+          content: {}
+    
+    #APAGAR REGISTROS
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+      - Categorias
+      summary: Deleta um Tipo de Categoria através do seu id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/delete'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response'
+        404:
+          description: Nenhum Tipo de Categoria cadastrada com esse id
+          content: {}
+        500:
+          description: Internal Server Error
+          content: {}
+
+  /categorias/{id}:
+    #LISTAR REGISTRO ESPECÍFICO
+    get:
+      tags:
+      - Categorias
+      summary: Lista um Tipo de Categoria através do seu id
+      parameters:
+      - name: id
+        in: path
+        description: id da categoria
+        required: true
+        schema:
+          type: integer
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/post'
+        404:
+          description: Nenhum Tipo de Categoria cadastrada com esse id
+          content: {}
+        500:
+          description: Internal Server Error
+          content: {}
+
+  # Login
+  /users/login:
+    #Autenticação de Usuários
+    post:
+      tags:
+      - Login
+      summary: Realiza a autenticação de usuários e gera token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/user'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/login'
+        401:
+          description: Usuário não autenticado
+          content: {}
+        404:
+          description: Nenhuma registro encontrado
+          content: {}
+        500:
+          description: Internal Server Error
+          content: {}
+
+#SCHEMA
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    response:
+      required:
+      - TPC_PRIM
+      - TPC_NOME
+      - TPC_STAT
+      type: object
+      properties:
+        TPC_PRIM:
+          type: integer
+          example: 1
+        TPC_NOME:
+          type: string
+          example: "Outros"
+        TPC_STAT:
+          type: integer
+          example: 1
+    post:
+      required:
+      - nome
+      - status
+      type: object
+      properties:
+        nome:
+          type: string
+          example: "Outros"
+        status:
+          type: integer
+          example: 1
+    patch:
+      required:
+      - id
+      - nome
+      - status
+      type: object
+      properties:
+        id:
+          type: integer
+        nome:
+          type: string
+          example: "Outros"
+        status:
+          type: integer
+          example: 1
+    delete:
+      required:
+      - id
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+    user:
+      required:
+      - usuario
+      - senha
+      type: object
+      properties:
+        usuario:
+          type: string
+          example: "user"
+        senha:
+          type: string
+          example: "password"
+    login:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 200
+        msg:
+          type: string
+          example: "Usuário autenticado com sucesso!"
+        token:
+          type: string
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwidXN1YXJpbyI6ImFsZW5hc...."
+security:
+  - bearerAuth: []
