@@ -18,7 +18,7 @@ Este projeto usa:
 
 ## Respositório na núvem
 
-* [GitHub](https://github.com/rickscombr/rest-api.git)
+* [GitHub](https://github.com/rickscombr/api-rest.git)
 
 ## Instalação
 
