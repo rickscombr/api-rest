@@ -14,6 +14,9 @@ const swgCategorias = yamlJs.load('./src/docs/categorias.yml');
 const swgPessoas = yamlJs.load('./src/docs/pessoas.yml');
 const swgUsers = yamlJs.load('./src/docs/users.yml');
 
+let hoje = new Date(Date.now());
+hoje = hoje.getFullYear() + '-' + (hoje.getMonth() + 1) + '-' + hoje.getDate();
+
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded( { extended: false } ));
 app.use(bodyParser.json());
@@ -45,7 +48,7 @@ app.use((req, res, next) => {
     erro.status = 404;
     erro.code = 404;
     erro.msg = 'Rota não encontrada';
-    erro.date = null;
+    erro.date = hoje;
 
     next(erro)
 });
