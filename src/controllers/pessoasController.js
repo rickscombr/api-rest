@@ -8,7 +8,12 @@ exports.getPessoas = (req, res, next) => {
     mysql.getConnection( (error, conn) => {
         if ( error ) { return res.status(500).send({ error: error })}
         conn.query(
-            'SELECT * FROM FI_TIPO_PESSOA WHERE TPP_STAT < 9',
+            `SELECT
+                TPP_PRIM as id,
+                TPP_NOME as nome,
+                TPP_SIGL as sigla,
+                TPP_STAT as status
+             FROM FI_TIPO_PESSOA WHERE TPP_STAT < 9`,
             (error, result, filds) => {
                 conn.release();
                 if ( error ) { return res.status(500).send({ error: error })}
@@ -29,7 +34,12 @@ exports.getPessoasId = (req, res, next) => {
     mysql.getConnection( (error, conn) =>{
         if ( error ) { return res.status(500).send({ error: error })}
         conn.query(
-            'SELECT * FROM FI_TIPO_PESSOA WHERE TPP_STAT < 9 AND TPP_PRIM = ?',
+            `SELECT
+                TPP_PRIM as id,
+                TPP_NOME as nome,
+                TPP_SIGL as sigla,
+                TPP_STAT as status
+            FROM FI_TIPO_PESSOA WHERE TPP_STAT < 9 AND TPP_PRIM = ?`,
             [req.params.id],
             (error, result, filds) => {
                 conn.release();
@@ -66,7 +76,7 @@ exports.postPessoas = (req, res, next) => {
                     code: "SUC-201",
                     msg: "Tipo de Pessoa cadastrado com Sucesso!",
                     date: hoje,
-                    pessoas: pessoas
+                    pessoa: pessoas
                 });
             }
         );
@@ -96,7 +106,7 @@ exports.patchPessoas = (req, res, next) => {
                     code: "SUC-202",
                     msg: "Tipo de Pessoa atualizado com Sucesso!",
                     date: hoje,
-                    pessoas: pessoas
+                    pessoa: pessoas
                 });
             }
         );

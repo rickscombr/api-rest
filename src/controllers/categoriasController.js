@@ -7,7 +7,11 @@ exports.getCategorias = (req, res, next) => {
     mysql.getConnection( (error, conn) => {
         if ( error ) { return res.status(500).send({ error: error })}
         conn.query(
-            'SELECT * FROM FI_TIPO_CATEGORIA WHERE TPC_STAT < 9',
+            `SELECT 
+            TPC_PRIM as id, 
+            TPC_NOME as nome, 
+            TPC_STAT as status
+             FROM FI_TIPO_CATEGORIA WHERE TPC_STAT < 9`,
             (error, result, filds) => {
                 conn.release();
                 if ( error ) { return res.status(500).send({ error: error })}
@@ -28,7 +32,11 @@ exports.getCategoriasId = (req, res, next) => {
     mysql.getConnection( (error, conn) =>{
         if ( error ) { return res.status(500).send({ error: error })}
         conn.query(
-            'SELECT * FROM FI_TIPO_CATEGORIA WHERE TPC_STAT < 9 AND TPC_PRIM = ?',
+            `SELECT
+                TPC_PRIM as id, 
+                TPC_NOME as nome, 
+                TPC_STAT as status 
+             FROM FI_TIPO_CATEGORIA WHERE TPC_STAT < 9 AND TPC_PRIM = ?`,
             [req.params.id],
             (error, result, filds) => {
                 conn.release();
@@ -92,7 +100,7 @@ exports.patchCategorias = (req, res, next) => {
                     code: "SUC-202",
                     msg: "Categoria atualizada com Sucesso!",
                     date: hoje,
-                    categorias: categorias
+                    categoria: categorias
                 });
             }
         );
@@ -118,7 +126,7 @@ exports.deleteCategorias = (req, res, next) => {
                     code: "SUC-202",
                     msg: "Categoria excluída com Sucesso!",
                     date: hoje,
-                    categorias: categorias
+                    categoria: categorias
                 });
             }
         );
