@@ -15,7 +15,7 @@ exports.postUsersLogin = (req, res, next) => {
             if ( result.length < 1 ) {
                 res.status(401).send({
                     code: 401,
-                    msg: "Usuário não autenticado"
+                    msg: "Usuário não autenticado."
                 })
             }else{
                 const id = result[0].USE_PRIM;

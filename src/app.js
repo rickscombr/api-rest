@@ -20,7 +20,7 @@ app.use(bodyParser.json());
 
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*'); //Aceita requisições de todos o servidores
-//    res.header('Access-Control-Allow-Origin', 'http://finance.ricks.com.br'); //Aceita requisições apenas deste servidor
+//    res.header('Access-Control-Allow-Origin', 'http://api.ricks.com.br'); //Aceita requisições apenas deste servidor
     res.header(
         'Access-Control-Allow-Header',
         'Origin, X-Requested-With, Content-Type, Authorization'
